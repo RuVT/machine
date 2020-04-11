@@ -65,9 +65,17 @@ const (
 	Native   ClientType = "native"
 )
 
+func getEnv(key, fallback string) string {
+    if value, ok := os.LookupEnv(key); ok {
+        return value
+    }
+    return fallback
+}
+
 var (
+
 	baseSSHArgs = []string{
-		"-F", "/dev/null",
+		"-F", getEnv("DOCKER_MACHINE_SSH_CONFIG_FILE", "/dev/null"),
 		"-o", "ConnectionAttempts=3", // retry 3 times if SSH connection fails
 		"-o", "ConnectTimeout=10", // timeout after 10 seconds
 		"-o", "ControlMaster=no", // disable ssh multiplexing
